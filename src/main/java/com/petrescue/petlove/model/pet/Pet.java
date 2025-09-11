@@ -29,7 +29,7 @@ public abstract class Pet {
     private Long id;
 
     @NotBlank
-    private String nome;
+    private String name;
 
     @Enumerated(EnumType.STRING) @NotNull
     private Sex sex;
