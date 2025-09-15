@@ -21,7 +21,7 @@ import java.time.LocalDateTime;
 @Entity
 @Table (name = "adopters")
 
-public class Adopter extends PersonalData {
+public class Adopter {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

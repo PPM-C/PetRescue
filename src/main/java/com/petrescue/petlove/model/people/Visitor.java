@@ -30,8 +30,8 @@ public class Visitor {
     private String lastName;
 
     @FutureOrPresent
-    private LocalDateTime appoinmentAt;
+    private LocalDateTime appointmentAt;
 
     @CreationTimestamp
-    private LocalDateTime creationAt;
+    private LocalDateTime createdAt;
 }

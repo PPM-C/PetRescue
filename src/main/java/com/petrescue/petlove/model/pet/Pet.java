@@ -1,18 +1,13 @@
 package com.petrescue.petlove.model.pet;
 
 import com.petrescue.petlove.enums.*;
+import com.petrescue.petlove.enums.Size;
+import com.petrescue.petlove.model.shelter.Shelter;
 import jakarta.persistence.*;
-import jakarta.validation.constraints.AssertTrue;
-import jakarta.validation.constraints.NotBlank;
-import jakarta.validation.constraints.NotNull;
-import jakarta.validation.constraints.PastOrPresent;
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import jakarta.validation.constraints.*;
+import lombok.*;
 
 import java.time.LocalDate;
-import java.time.LocalDateTime;
 
 @Getter
 @Setter
@@ -21,7 +16,6 @@ import java.time.LocalDateTime;
 @Entity
 @Table(name = "pets")
 @Inheritance(strategy = InheritanceType.JOINED)
-
 public abstract class Pet {
 
     @Id
@@ -32,43 +26,54 @@ public abstract class Pet {
     private String name;
 
     @Enumerated(EnumType.STRING) @NotNull
+    @Column(nullable = false)
     private Sex sex;
 
     @Enumerated(EnumType.STRING) @NotNull
+    @Column(nullable = false)
     private Size size;
 
     @PastOrPresent @NotNull
+    @Column(nullable = false)
     private LocalDate arrivalDate;
 
     @PastOrPresent
     private LocalDate departureDate;
 
     @Enumerated(EnumType.STRING) @NotNull
-    private PetStatus status;
+    @Column(nullable = false)
+    private PetStatus status = PetStatus.Adoptable; // ← default coherente
 
     @Enumerated(EnumType.STRING) @NotNull
+    @Column(nullable = false)
     private Temperament temperament;
 
     @Enumerated(EnumType.STRING)
     private EnergyLevel energyLevel;
 
-    private Boolean goodWithDogs= true;
-    private Boolean goodWithCats= true;
+    private Boolean goodWithDogs = true;
+    private Boolean goodWithCats = true;
     private Boolean neutered = false;
 
-    @Enumerated(EnumType.STRING) @Column(nullable = false)
+    @ManyToOne(fetch = FetchType.LAZY, optional = false)
+    @JoinColumn(name = "shelter_id", nullable = false)
+    private Shelter shelter;
+
+    @Enumerated(EnumType.STRING)
+    @Column(nullable = false)
     private Species species;
 
+    @Column(columnDefinition = "TEXT")
+    private String notes;
+
     @AssertTrue(message = "departureDate solo existe con status=Adopted")
-    public boolean isdepartureDateValid() {
+    public boolean isDepartureDateValid() {
         return (status == PetStatus.Adopted && departureDate != null)
-                || (status == PetStatus.Adoptable && departureDate == null);}
+                || (status == PetStatus.Adoptable && departureDate == null);
+    }
 
     @AssertTrue(message = "arrivalDate debe ser <= departureDate")
     public boolean isDateOrderValid() {
         return departureDate == null || !arrivalDate.isAfter(departureDate);
     }
-
-
-
 }

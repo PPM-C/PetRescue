@@ -4,7 +4,6 @@ import com.petrescue.petlove.enums.EnergyLevel;
 import com.petrescue.petlove.enums.Sex;
 import com.petrescue.petlove.enums.Size;
 import com.petrescue.petlove.enums.Temperament;
-
 import java.time.LocalDate;
 
 public record PetUpdateDto(
@@ -17,5 +16,5 @@ public record PetUpdateDto(
         Boolean goodWithCats,
         Boolean neutered,
         LocalDate arrivalDate,
-
-) { }
+        String notes
+) {}

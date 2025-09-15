@@ -15,18 +15,18 @@ import org.springframework.transaction.annotation.Transactional;
 
 @Service
 @RequiredArgsConstructor
-
 public class ShelterServiceImpl implements ShelterService {
     private final ShelterRepository repo;
 
     @Override
-    public Page <ShelterDto> list (Pageable pageable){
+    public Page<ShelterDto> findAll(Pageable pageable) {
         return repo.findAll(pageable).map(this::toDto);
     }
 
     @Override
-    public ShelterDto get (Long id){
-        return repo.findAllById(id).map(this::toDto)
+    public ShelterDto findById(Long id) {
+        return repo.findById(id)
+                .map(this::toDto)
                 .orElseThrow(() -> new EntityNotFoundException("Shelter " + id + " not found"));
     }
 
@@ -34,6 +34,48 @@ public class ShelterServiceImpl implements ShelterService {
     @Transactional
     public ShelterDto create(ShelterCreateDto dto) {
         Shelter s = Shelter.builder()
-                .data(ShelterData.builder())
+                .data(ShelterData.builder()
+                        .name(dto.name())
+                        .email(dto.email())
+                        .phone(dto.phone())
+                        .website(dto.website())
+                        .address(dto.address())
+                        .build())
+                .build();
+        return toDto(repo.save(s));
+    }
+
+    @Override
+    @Transactional
+    public ShelterDto update(Long id, ShelterCreateDto dto) { // ← firma como en la interfaz
+        Shelter s = repo.findById(id)
+                .orElseThrow(() -> new EntityNotFoundException("Shelter " + id + " not found"));
+        var d = s.getData();
+        d.setName(dto.name());
+        d.setEmail(dto.email());
+        d.setPhone(dto.phone());
+        d.setWebsite(dto.website());
+        d.setAddress(dto.address());
+        return toDto(s);
+    }
+
+    @Override
+    @Transactional
+    public void delete(Long id) {
+        if (!repo.existsById(id)) throw new EntityNotFoundException("Shelter " + id + " not found");
+        repo.deleteById(id);
+    }
+
+    private ShelterDto toDto(Shelter s) {
+        var d = s.getData();
+        return new ShelterDto(
+                s.getId(),
+                d.getName(),
+                d.getEmail(), // ← corregido (antes d.getName())
+                d.getPhone(),
+                d.getWebsite(),
+                d.getAddress()
+        );
     }
 }
+

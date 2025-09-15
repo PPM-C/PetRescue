@@ -21,50 +21,45 @@ import org.springframework.transaction.annotation.Transactional;
 
 @Service
 @RequiredArgsConstructor
-
 public class PetServiceImp implements PetService {
 
     private final PetRepository petRepo;
     private final ShelterRepository shelterRepo;
 
     @Override
-    public Page <PetDto> List (Pageable pageable) {
+    public Page<PetDto> List(Pageable pageable) {
         return petRepo.findAll(pageable).map(this::toDto);
     }
 
     @Override
     public PetDto get(long id) {
-        return  petRepo.findById(id).map(this::toDto)
-                .orElseThrow(()-> new EntityNotFoundException("Pet " + id + " not found"));
+        return petRepo.findById(id)
+                .map(this::toDto)
+                .orElseThrow(() -> new EntityNotFoundException("Pet " + id + " not found"));
     }
 
     @Override
     @Transactional
-    public PetDto create (PetCreateDto dto){
+    public PetDto create(PetCreateDto dto) {
         Shelter shelter = shelterRepo.findById(dto.shelterId())
                 .orElseThrow(() -> new EntityNotFoundException("Shelter " + dto.shelterId() + " not found"));
 
-        Pet pet = switch (dto.species()){
-            case Dog -> {
-                Dog d = Dog.builder().breed(dto.breed()).isTrained(Boolean.TRUE.equals(dto.isTrained())).build();
-                yield d;
-            }
-            case Cat -> {
-                Cat c = Cat.builder()
-                        .breed(dto.breed())
-                        .litterTrained(dto.litterTrained()==null ? true : dto.litterTrained())
-                        .build();
-                yield c;
-            }
-            case Ferret -> {
-                Ferret f = Ferret.builder()
-                        .breed(dto.breed())
-                        .odorControlTrained(Boolean.TRUE.equals(dto.odorControlTrained()))
-                        .build();
-                yield f;
-            }
+        Pet pet = switch (dto.species()) {
+            case Dog -> Dog.builder()
+                    .breed(dto.breed())
+                    .isTrained(Boolean.TRUE.equals(dto.isTrained()))
+                    .build();
+            case Cat -> Cat.builder()
+                    .breed(dto.breed())
+                    .litterTrained(dto.litterTrained() == null ? true : dto.litterTrained())
+                    .build();
+            case Ferret -> Ferret.builder()
+                    .breed(dto.breed())
+                    .odorControlTrained(Boolean.TRUE.equals(dto.odorControlTrained()))
+                    .build();
         };
 
+        pet.setShelter(shelter);                  // ← asignar shelter
         pet.setSpecies(dto.species());
         pet.setName(dto.name());
         pet.setSex(dto.sex());
@@ -76,31 +71,37 @@ public class PetServiceImp implements PetService {
         pet.setGoodWithCats(dto.goodWithCats() == null ? true : dto.goodWithCats());
         pet.setNeutered(dto.neutered() == null ? false : dto.neutered());
         pet.setStatus(PetStatus.Adoptable);
-        return toDto (petRepo.save(pet));
+        return toDto(petRepo.save(pet));
     }
 
+    @Override
     @Transactional
-    public PetDto update ( Long id, PetUpdateDto dto) {
-        Pet pet = petRepo.findById(id).orElseThrow(() -> new EntityNotFoundException("Pet " + id + " not found"));
-        if (dto.name() != null) pet.setName(dto.name());
-        if (dto.sex() !=null) pet.setSex(dto.sex());
-        if (dto.size() != null) pet.setSize(dto.size());
-        if (dto.temperament() != null) pet.setTemperament(dto.temperament());
-        if (dto.energyLevel() != null) pet.setEnergyLevel(dto.energyLevel());
+    public PetDto update(long id, PetUpdateDto dto) { // ← firma con 'long' como la interfaz
+        Pet pet = petRepo.findById(id)
+                .orElseThrow(() -> new EntityNotFoundException("Pet " + id + " not found"));
+
+        if (dto.name() != null)         pet.setName(dto.name());
+        if (dto.sex() != null)          pet.setSex(dto.sex());
+        if (dto.size() != null)         pet.setSize(dto.size());
+        if (dto.temperament() != null)  pet.setTemperament(dto.temperament());
+        if (dto.energyLevel() != null)  pet.setEnergyLevel(dto.energyLevel());
         if (dto.goodWithDogs() != null) pet.setGoodWithDogs(dto.goodWithDogs());
         if (dto.goodWithCats() != null) pet.setGoodWithCats(dto.goodWithCats());
-        if (dto.neutered() != null) pet.setNeutered(dto.neutered());
-        if (dto.arrivalDate() != null) pet.setArrivalDate(dto.arrivalDate());
-        return toDto (pet);
+        if (dto.neutered() != null)     pet.setNeutered(dto.neutered());
+        if (dto.arrivalDate() != null)  pet.setArrivalDate(dto.arrivalDate());
+        if (dto.notes() != null)        pet.setNotes(dto.notes());
+
+        return toDto(pet);
     }
 
+    @Override
     @Transactional
-    public void delete (Long id) {
+    public void delete(long id) { // ← firma con 'long' como la interfaz
         if (!petRepo.existsById(id)) throw new EntityNotFoundException("Pet " + id + " not found");
         petRepo.deleteById(id);
     }
 
-    private PetDto toDto (Pet p) {
+    private PetDto toDto(Pet p) {
         return new PetDto(
                 p.getId(),
                 p.getSpecies(),
@@ -114,7 +115,9 @@ public class PetServiceImp implements PetService {
                 p.getGoodWithCats(),
                 p.getNeutered(),
                 p.getArrivalDate(),
-                p.getDepartureDate()
+                p.getDepartureDate(),
+                p.getShelter() != null ? p.getShelter().getId() : null,
+                p.getNotes()
         );
     }
 }

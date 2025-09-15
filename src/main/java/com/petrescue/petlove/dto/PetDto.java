@@ -18,5 +18,6 @@ public record PetDto(
         Boolean neutered,
         LocalDate arrivalDate,
         LocalDate departureDate,
-        Long shelterId
+        Long shelterId,
+        String notes
 ) { }
