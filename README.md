@@ -7,14 +7,16 @@ Construida con Java 17, Spring Boot 3, JPA/Hibernate y MySQL, con validación y 
 Conectar refugios con familias adoptantes de forma responsable, mostrando temperamento, energía y compatibilidades de cada animal.
 
 ## 🎯 Objetivos Principales
-Objetivo General
+**Objetivo General:**
 
 Desarrollar una API robusta y escalable que gestione el ciclo de adopción: registro de mascotas, solicitudes, visitas y decisión final.
 
-## Objetivos Específicos
+**Objetivos Específicos:**
 
 📚 Gestión Operativa: CRUD de shelter, pet, adopter y visitor; flujo de adoption request y visitas.
+
 👨‍👩‍👧‍👦 Experiencia: visibilidad de temperamento, energía y compatibilidades.
+
 🧱 Calidad Técnica: herencia JPA, validación, manejo de errores y tests.
 
 ## 📊 Alcance del Proyecto
@@ -22,23 +24,33 @@ Desarrollar una API robusta y escalable que gestione el ciclo de adopción: regi
 Incluye:
 
 ✅ CRUD de Shelter, Pet, Adopter, Visitor
+
 ✅ AdoptionRequest (Pending/Approved/Rejected/Canceled)
+
 ✅ Visit (Scheduled/Completed/Canceled/NoShow)
+
 ✅ Herencia JPA (JOINED) para Pet → Dog/Cat/Ferret
 
 Excluye (versión actual):
 
 ❌ Frontend
+
 ❌ Autenticación JWT/roles (bonus)
+
 ❌ Subida de imágenes
+
 ❌ Notificaciones
 
 ## ⚙️ Funcionalidades Principales
 
 🐶 Mascotas: fechas de llegada/salida, estado, temperamento, energía y compatibilidades.
+
 🏠 Refugios: ShelterData embebido, relación 1–N con Pet.
+
 🧑 Personas: Visitor (cita) y Adopter con PersonalData embebido.
+
 📝 AdoptionRequest: evita duplicados activos; aprobar → Pet.Adopted y auto-rechazo del resto.
+
 📅 Visits: programar, reprogramar, cancelar y completar con validación de fechas futuras.
 
 ## Diagrama UML
@@ -66,10 +78,15 @@ Manejo de errores: @RestControllerAdvice global devuelve JSON consistente para 4
 ## 🛠️ Stack Tecnológico
 
 Java 17, Spring Boot 3.x (Web, Data JPA, Validation)
+
 Hibernate/JPA (Herencia JOINED)
+
 MySQL (runtime) + H2 (tests)
+
 Lombok
+
 JUnit 5, Mockito, Spring Test
+
 DBeaver (SQL), Postman (pruebas)
 
 ## 🌐 API y Endpoints
@@ -197,14 +214,19 @@ Programar
 ## 🎬 Casos de Uso
 
 Crear solicitud: POST /adoption-requests → queda Pending.
+
 Aprobar: POST /adoption-requests/{id}/approve → Pet.Adopted + auto-rechazo de otras Pending.
+
 Agenda de visitas: POST /visits/{requestId} (fecha futura), reprogramar/cancelar/complete según evolución.
 
 ## 🧩 Instalación y Setup
 
 Requisitos
+
 Java 17, Maven 3.9+, MySQL 8+
+
 Configuración
+
 src/main/resources/application.properties
 ```
 spring.datasource.url=jdbc:mysql://localhost:3306/paw_match?createDatabaseIfNotExist=true
@@ -243,23 +265,33 @@ Ejecutar tests
 ```
 mvn -Dspring.profiles.active=test test
 ```
-Cobertura actual
+**Cobertura actual**
 
 Controller (Web slice): AdopterControllerTest
+
 Verifica POST /api/adopters → 201 Created, header Location, JSON esperado.
+
 Repository (Data JPA): ShelterRepositoryTest
+
 Persiste y lee @Embeddable ShelterData.
+
 Service (unitario con Mockito): VisitServiceImplTest
+
 Programa visita sólo si la AdoptionRequest está Pending y la fecha es futura; reprograma/cancela.
 
 
 ## 🚀 Futuras Mejoras
 
 🔐 JWT + roles (admin/voluntario/adoptante)
+
 🔎 Búsquedas avanzadas (Specifications) y “match” sugerido
+
 🖼️ Fotos de mascotas
+
 📨 Emails (confirmación de visitas)
+
 📈 Actuator/Métricas, logs
+
 🗂️ Migraciones (Flyway/Liquibase)
 
 ## 🔗 Enlaces y Créditos
