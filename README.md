@@ -296,7 +296,7 @@ Programa visita sólo si la AdoptionRequest está Pending y la fecha es futura; 
 
 ## 🔗 Enlaces y Créditos
 
-📂 Repositorio: [GitHub](https://github.com/PPM-C/PetRescue.git))
+📂 Repositorio: [GitHub](https://github.com/PPM-C/PetRescue.git)
 
 🧪 Colección Postman: [Pamela Workspace](https://pamelapalacios-892168.postman.co/workspace/641a9255-7576-4b1f-8a20-b75f954aed01/collection/46790740-841cc4c8-6360-4131-895c-3346a089d522?action=share&source=copy-link&creator=46790740)
 
