@@ -1,46 +1,48 @@
 package com.petrescue.petlove.controller;
 
+import com.petrescue.petlove.api.PageResponse;
 import com.petrescue.petlove.dto.VisitCreateDto;
 import com.petrescue.petlove.dto.VisitDto;
-import com.petrescue.petlove.dto.VisitRescheduleDto;
-import com.petrescue.petlove.service.Interface.VisitService;
+import com.petrescue.petlove.dto.VisitUpdateDto;
+import com.petrescue.petlove.service.interfaces.VisitService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
-import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
-import org.springframework.http.ResponseEntity;
+import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
-@RequiredArgsConstructor
 @RequestMapping("/api/visits")
+@RequiredArgsConstructor
+@CrossOrigin(origins = {"http://localhost:5173"})
 public class VisitController {
 
-    private final VisitService service;
+  private final VisitService service;
 
-    @GetMapping
-    public Page<VisitDto> list(@RequestParam(required = false) Long requestId, Pageable pageable) {
-        return service.list(requestId, pageable);
-    }
+  @GetMapping
+  public PageResponse<VisitDto> list(@RequestParam(value="requestId",required=false) Long requestId,
+                                     @RequestParam(value="status",required=false) String status,
+                                     Pageable pageable){
+    return PageResponse.of(service.list(requestId, status, pageable));
+  }
 
-    @PostMapping("/{requestId}")
-    public ResponseEntity<VisitDto> schedule(@PathVariable Long requestId,
-                                             @Valid @RequestBody VisitCreateDto dto) {
-        return ResponseEntity.ok(service.schedule(requestId, dto));
-    }
+  @PostMapping @ResponseStatus(HttpStatus.CREATED)
+  public VisitDto create(@Valid @RequestBody VisitCreateDto dto){
+    return service.create(dto);
+  }
 
-    @PatchMapping("/{visitId}/reschedule")
-    public VisitDto reschedule(@PathVariable Long visitId, @RequestBody VisitRescheduleDto dto) {
-        return service.reschedule(visitId, dto);
-    }
+  @PutMapping("/{id}")
+  public VisitDto update(@PathVariable Long id, @Valid @RequestBody VisitUpdateDto dto){
+    return service.update(id, dto);
+  }
 
-    @PostMapping("/{visitId}/cancel")
-    public VisitDto cancel(@PathVariable Long visitId, @RequestBody(required = false) VisitRescheduleDto reasonMaybe) {
-        return service.cancel(visitId, reasonMaybe);
-    }
+  @PostMapping("/{id}/cancel")
+  public VisitDto cancel(@PathVariable Long id){
+    return service.cancel(id);
+  }
 
-    @PostMapping("/{visitId}/complete")
-    public VisitDto complete(@PathVariable Long visitId, @RequestBody(required = false) VisitRescheduleDto notesMaybe) {
-        return service.complete(visitId, notesMaybe);
-    }
+  @DeleteMapping("/{id}") @ResponseStatus(HttpStatus.NO_CONTENT)
+  public void delete(@PathVariable Long id){
+    service.delete(id);
+  }
 }

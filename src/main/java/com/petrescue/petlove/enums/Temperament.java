@@ -1,8 +1,3 @@
 package com.petrescue.petlove.enums;
 
-public enum Temperament {
-    Sociable,
-    Reactive,
-    Shy,
-    Insecure;
-}
+public enum Temperament { CALM, FRIENDLY, SHY, REACTIVE }

@@ -1,53 +1,53 @@
 package com.petrescue.petlove.controller;
 
+import com.petrescue.petlove.api.PageResponse;
 import com.petrescue.petlove.dto.AdoptionRequestCreateDto;
 import com.petrescue.petlove.dto.AdoptionRequestDto;
 import com.petrescue.petlove.dto.DecisionDto;
-import com.petrescue.petlove.service.Interface.AdoptionRequestService;
+import com.petrescue.petlove.service.interfaces.AdoptionRequestService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
-import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
-import org.springframework.http.ResponseEntity;
+import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 @RestController
-@RequiredArgsConstructor
 @RequestMapping("/api/adoption-requests")
+@RequiredArgsConstructor
+@CrossOrigin(origins = {"http://localhost:5173"})
 public class AdoptionRequestController {
 
-    private final AdoptionRequestService service;
+  private final AdoptionRequestService service;
 
-    @GetMapping
-    public Page<AdoptionRequestDto> list(
-            @RequestParam(required = false) Long petId,
-            @RequestParam(required = false) Long adopterId,
-            Pageable pageable
-    ) {
-        return service.list(petId, adopterId, pageable);
-    }
+  // Tablero admin + filtros opcionales
+  @GetMapping
+  public PageResponse<AdoptionRequestDto> list(
+      @RequestParam(value="petId", required=false) Long petId,
+      @RequestParam(value="adopterId", required=false) Long adopterId,
+      @RequestParam(value="status", required=false) String status,
+      Pageable pageable) {
+    return PageResponse.of(service.list(petId, adopterId, status, pageable));
+  }
 
-    @PostMapping
-    public ResponseEntity<AdoptionRequestDto> create(@Valid @RequestBody AdoptionRequestCreateDto dto) {
-        var created = service.create(dto);
-        var uri = ServletUriComponentsBuilder.fromCurrentRequest()
-                .path("/{id}").buildAndExpand(created.id()).toUri();
-        return ResponseEntity.created(uri).body(created);
-    }
+  // Form público (user/admin): puede mandar petName en vez de petId
+  @PostMapping @ResponseStatus(HttpStatus.CREATED)
+  public AdoptionRequestDto create(@Valid @RequestBody AdoptionRequestCreateDto dto){
+    return service.create(dto);
+  }
 
-    @PostMapping("/{id}/approve")
-    public AdoptionRequestDto approve(@PathVariable Long id, @RequestBody(required = false) DecisionDto reason) {
-        return service.approve(id, reason);
-    }
+  // Acciones admin
+  @PostMapping("/{id}/approve")
+  public AdoptionRequestDto approve(@PathVariable Long id, @RequestBody(required=false) DecisionDto dto){
+    return service.approve(id, dto);
+  }
 
-    @PostMapping("/{id}/reject")
-    public AdoptionRequestDto reject(@PathVariable Long id, @RequestBody(required = false) DecisionDto reason) {
-        return service.reject(id, reason);
-    }
+  @PostMapping("/{id}/reject")
+  public AdoptionRequestDto reject(@PathVariable Long id, @RequestBody(required=false) DecisionDto dto){
+    return service.reject(id, dto);
+  }
 
-    @PostMapping("/{id}/cancel")
-    public AdoptionRequestDto cancel(@PathVariable Long id, @RequestBody(required = false) DecisionDto reason) {
-        return service.cancel(id, reason);
-    }
+  @PostMapping("/{id}/cancel")
+  public AdoptionRequestDto cancel(@PathVariable Long id, @RequestBody(required=false) DecisionDto dto){
+    return service.cancel(id, dto);
+  }
 }

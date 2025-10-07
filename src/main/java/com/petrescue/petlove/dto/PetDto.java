@@ -1,7 +1,6 @@
 package com.petrescue.petlove.dto;
 
 import com.petrescue.petlove.enums.*;
-
 import java.time.LocalDate;
 
 public record PetDto(
@@ -19,5 +18,6 @@ public record PetDto(
         LocalDate arrivalDate,
         LocalDate departureDate,
         Long shelterId,
-        String notes
-) { }
+        String notes,
+        String photoUrl
+) {}

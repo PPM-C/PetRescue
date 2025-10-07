@@ -16,5 +16,6 @@ public record PetUpdateDto(
         Boolean goodWithCats,
         Boolean neutered,
         LocalDate arrivalDate,
-        String notes
+        String notes,
+        String photoUrl
 ) {}

@@ -38,9 +38,18 @@ class AdopterControllerTest {
         in.setBirthDate(LocalDate.of(1994,5,12));
 
         var out = new AdopterDto(
-                1L, "Ana", "García", "DNI-1", "ana@example.com", "600000000",
-                LocalDate.of(1994,5,12), LocalDateTime.now(), LocalDateTime.now()
+                1L,                    // id (Long)
+                "Ana",                 // firstName
+                "García",              // lastName
+                "DNI-1",               // docId
+                "ana@example.com",     // email
+                "600000000",           // phone
+                "C/ Falsa 123",        // <-- address (el String que faltaba)
+                LocalDate.of(1994,5,12),
+                LocalDateTime.now(),
+                LocalDateTime.now()
         );
+
 
         when(service.create(any(AdopterCreateDto.class))).thenReturn(out);
 

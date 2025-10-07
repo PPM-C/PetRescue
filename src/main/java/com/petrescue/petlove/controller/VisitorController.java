@@ -3,7 +3,7 @@ package com.petrescue.petlove.controller;
 import com.petrescue.petlove.dto.AdopterDto;
 import com.petrescue.petlove.dto.VisitorCreateDto;
 import com.petrescue.petlove.dto.VisitorDto;
-import com.petrescue.petlove.service.Interface.VisitorService;
+import com.petrescue.petlove.service.interfaces.VisitorService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;

@@ -1,7 +1,3 @@
 package com.petrescue.petlove.enums;
 
-public enum EnergyLevel {
-    Inactive,
-    Neutral,
-    Active;
-}
+public enum EnergyLevel { LOW, MEDIUM, HIGH }

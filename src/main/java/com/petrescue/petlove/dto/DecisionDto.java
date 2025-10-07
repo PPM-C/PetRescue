@@ -1,4 +1,9 @@
 package com.petrescue.petlove.dto;
 
-public record DecisionDto(String reason) {
+import lombok.Data;
+
+@Data
+public class DecisionDto {
+    private String reason;
+    private Long decidedByUserId;
 }

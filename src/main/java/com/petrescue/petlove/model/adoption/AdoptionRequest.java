@@ -1,69 +1,37 @@
 package com.petrescue.petlove.model.adoption;
 
 import com.petrescue.petlove.enums.AdoptionStatus;
-import com.petrescue.petlove.model.people.Adopter;
 import com.petrescue.petlove.model.pet.Pet;
 import jakarta.persistence.*;
-import jakarta.validation.constraints.NotNull;
 import lombok.*;
-import org.hibernate.annotations.CreationTimestamp;
-import org.hibernate.annotations.UpdateTimestamp;
 
-import java.time.LocalDateTime;
+import java.time.Instant;
 
-@Getter
-@Setter
-@NoArgsConstructor
-@AllArgsConstructor
-@Builder
-@ToString(onlyExplicitlyIncluded = true)
-@EqualsAndHashCode(onlyExplicitlyIncluded = true)
 @Entity
-@Table(
-        name = "adoption_requests",
-        indexes = {
-                @Index(name = "ix_adoption_req_pet", columnList = "pet_id"),
-                @Index(name = "ix_adoption", columnList = "adopter_id")
-        }
-)
+@Table(name = "adoption_requests")
+@Getter @Setter
+@NoArgsConstructor @AllArgsConstructor
+@Builder
 public class AdoptionRequest {
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @EqualsAndHashCode.Include
-    @ToString.Include
+
+    @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @ManyToOne(optional = false,fetch = FetchType.LAZY)
-    @JoinColumn(name = "adopter_id",nullable = false)
-    @ToString.Exclude
-    private Adopter adopter;
-
-    @ManyToOne(optional = false, fetch = FetchType.LAZY)
-    @JoinColumn(name = "pet_id", nullable = false)
-    @ToString.Exclude
-    private Pet pet;
+    @ManyToOne(optional = false) private Adopter adopter;
+    @ManyToOne(optional = false) private Pet pet;
 
     @Enumerated(EnumType.STRING)
-    @Column(nullable = false,length = 20)
-    @NotNull
-    @ToString.Include
-    private AdoptionStatus status=AdoptionStatus.Pending;
+    @Column(nullable = false)
+    private AdoptionStatus status;
 
-    @Column(length = 1000)
     private String message;
 
-    // Datos de decisión
+    // decisión
     private Long decidedByUserId;
-
-    @Column(length = 500)
     private String decisionReason;
+    private Instant decidedAt;
 
-    private LocalDateTime decidedAt;
-
-    @CreationTimestamp
-    private LocalDateTime createdAt;
-
-    @UpdateTimestamp
-    private LocalDateTime updatedAt;
-
+    // timestamps comunes (si los tienes con @PrePersist / @PreUpdate, mantenlos)
+    private Instant createdAt;
+    private Instant updatedAt;
 }

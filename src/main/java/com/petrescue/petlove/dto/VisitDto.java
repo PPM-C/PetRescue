@@ -6,10 +6,8 @@ import java.time.LocalDateTime;
 
 public record VisitDto(
         Long id,
-        Long adoptionRequestId,
-        VisitStatus status,
+        Long requestId,
         LocalDateTime scheduledAt,
-        String notes,
-        LocalDateTime createdAt,
-        LocalDateTime updatedAt
-) { }
+        VisitStatus status,
+        String notes
+) {}

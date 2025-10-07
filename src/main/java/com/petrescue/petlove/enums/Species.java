@@ -1,7 +1,6 @@
 package com.petrescue.petlove.enums;
 
-public enum Species {
-    Dog,
-    Cat,
-    Ferret;
-}
+public enum Species { 
+    DOG, 
+    CAT, 
+   FERRET }

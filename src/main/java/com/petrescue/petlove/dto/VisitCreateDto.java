@@ -1,12 +1,13 @@
 package com.petrescue.petlove.dto;
 
-import jakarta.validation.constraints.FutureOrPresent;
 import jakarta.validation.constraints.NotNull;
+import lombok.Data;
 
 import java.time.LocalDateTime;
 
-public record VisitCreateDto(
-        @NotNull @FutureOrPresent LocalDateTime scheduledAt,
-        String notes
-        ) {
+@Data
+public class VisitCreateDto {
+    @NotNull private Long requestId;
+    @NotNull private LocalDateTime scheduledAt;
+    private String notes;
 }

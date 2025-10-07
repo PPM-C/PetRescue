@@ -1,23 +1,15 @@
 package com.petrescue.petlove.model.pet;
 
-import com.petrescue.petlove.enums.Species;
 import jakarta.persistence.Entity;
-import jakarta.persistence.PrePersist;
-import jakarta.persistence.PreUpdate;
 import jakarta.persistence.Table;
-import lombok.*;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 
-@Getter
-@Setter
-@NoArgsConstructor
-@AllArgsConstructor
-@Builder
 @Entity
 @Table(name = "dogs")
+@Getter @Setter @NoArgsConstructor
 public class Dog extends Pet {
     private String breed;
-    private Boolean isTrained = false;
-
-    @PrePersist @PreUpdate
-    private void setSpeciesFlag() { setSpecies(Species.Dog);}
+    private boolean trained;
 }

@@ -1,6 +1,3 @@
 package com.petrescue.petlove.enums;
 
-public enum Sex {
-    Male,
-    Female;
-}
+public enum Sex { MALE, FEMALE }

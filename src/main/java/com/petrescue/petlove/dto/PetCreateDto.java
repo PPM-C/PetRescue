@@ -24,5 +24,9 @@ public record PetCreateDto (
         String breed,
         Boolean isTrained, //dog
         Boolean litterTrained, //cat
-        Boolean odorControlTrained //ferret
+        Boolean odorControlTrained, //ferret
+
+        String photoUrl
+
+        
         ){ }

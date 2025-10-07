@@ -55,7 +55,7 @@ public class Visit {
 
     @AssertTrue(message = "scheduledAt debe ser futuro si la visita está Scheduled")
     private boolean isScheduledConsistent() {
-        if (status != VisitStatus.Scheduled || scheduledAt == null) return true;
+        if (status != VisitStatus.SCHEDULED || scheduledAt == null) return true;
         return !scheduledAt.isBefore(LocalDateTime.now());
     }
 

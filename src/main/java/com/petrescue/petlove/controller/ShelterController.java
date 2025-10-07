@@ -2,7 +2,7 @@ package com.petrescue.petlove.controller;
 
 import com.petrescue.petlove.dto.ShelterCreateDto;
 import com.petrescue.petlove.dto.ShelterDto;
-import com.petrescue.petlove.service.Interface.ShelterService;
+import com.petrescue.petlove.service.interfaces.ShelterService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
